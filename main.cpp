@@ -3,7 +3,7 @@
 #include <list>
 
 int main() {
-  std::list<long long> numbers = {};
+  std::list<double> numbers = {};
 
   do {
     std::string input;
@@ -17,9 +17,27 @@ int main() {
     char *end = nullptr;
 
     do {
+      double number = 0;
+
       std::cout << "Processing: " << start << std::endl;
-      long long number = strtoll(start, &end, 10);
-      std::cout << "Got: " << number << std::endl;
+      long long significant = strtoll(start, &end, 10);
+      std::cout << "Got: " << significant << std::endl;
+
+      number += significant;
+
+      if (*end == '.') {
+        std::cout << "Floating point detected!" << std::endl;
+
+        end++;
+        start = end;
+        end = nullptr;
+        std::cout << "Processing: " << start << std::endl;
+        long long fractional = strtoll(start, &end, 10);
+        std::cout << "Got: " << fractional << std::endl;
+
+        number += fractional / pow(10, end - start);
+        std::cout << "Floating point result: " << number << std::endl;
+      }
 
       // did not read a number
       if (start == end) {
@@ -36,9 +54,9 @@ int main() {
         }
 
         if (*start == '+') {
-          long long a = numbers.back();
+          double a = numbers.back();
           numbers.pop_back();
-          long long b = numbers.back();
+          double b = numbers.back();
           numbers.pop_back();
 
           number = a + b;
@@ -46,9 +64,9 @@ int main() {
 
           start++;
         } else if (*start == '*') {
-          long long a = numbers.back();
+          double a = numbers.back();
           numbers.pop_back();
-          long long b = numbers.back();
+          double b = numbers.back();
           numbers.pop_back();
 
           number = a * b;
@@ -56,9 +74,9 @@ int main() {
 
           start++;
         } else if (*start == '-') {
-          long long a = numbers.back();
+          double a = numbers.back();
           numbers.pop_back();
-          long long b = numbers.back();
+          double b = numbers.back();
           numbers.pop_back();
 
           number = b - a;
@@ -66,9 +84,9 @@ int main() {
 
           start++;
         } else if (*start == '/') {
-          long long a = numbers.back();
+          double a = numbers.back();
           numbers.pop_back();
-          long long b = numbers.back();
+          double b = numbers.back();
           numbers.pop_back();
 
           number = b / a;
